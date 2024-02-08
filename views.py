@@ -5,18 +5,19 @@ import time
 
 
 def homepage():
+    collect_system_info()
     return render_template("index.html")
 
-def cpu():
+def CPU_Usage():
     return render_template("cpu_usage.html", cpu_counts=psutil.cpu_count)
 
-def memory():
+def Memory_Utilization():
     return render_template("memory_utilization.html", total_memory=psutil.virtual_memory.total)
 
-def disk_space():
+def Disk_Space():
     return render_template("disk_space.html", total_space=psutil.disk_usage.total)
 
-def active_processes():
+def Active_Processes():
     return render_template("active_processes.html")
 
 def collect_system_info():

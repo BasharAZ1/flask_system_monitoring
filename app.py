@@ -17,7 +17,7 @@ migrate = Migrate(app, db)
 configure_routes(app)
 
 if __name__ == "__main__":
-    monitoring_thread = threading.Thread(target=collect_system_info)
-    monitoring_thread.start()
-    
+    # monitoring_thread = threading.Thread(target=collect_system_info)
+    # monitoring_thread.start()
+
     app.run(debug=True)
