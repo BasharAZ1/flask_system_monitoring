@@ -1,8 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash, check_password_hash
-db = SQLAlchemy()
 from datetime import datetime
 
+
+db = SQLAlchemy()
 
 class Cpu(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -26,7 +26,6 @@ class Disk(db.Model):
     used = db.Column(db.Integer, unique=False, nullable=False)
     free = db.Column(db.Integer, unique=False, nullable=False)
     usage_percent = db.Column(db.Float, unique=False, nullable=False)
-    
     
 class Active_processes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
