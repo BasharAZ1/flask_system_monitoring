@@ -3,7 +3,6 @@ from flask_migrate import Migrate
 from urls import configure_routes
 from models import db
 import os
-from apscheduler.schedulers.background import BackgroundScheduler
 
 
 
