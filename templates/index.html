@@ -28,6 +28,30 @@
     </header>
 
     <main>
+        <script>
+            function collectSystemInfo() {
+                $.ajax({
+                    url: '/collect_system_info',
+                    type: 'POST',
+                    success: function(response) {
+                        console.log('System info collected successfully');
+                    },
+                    error: function(error) {
+                        console.error('Error collecting system info:', error);
+                    }
+                });
+            }
+        
+            $(document).ready(function() {
+                collectSystemInfo(); // Start collecting system info once when the page loads
+        
+                // Set up interval to collect system info every minute
+                setInterval(function() {
+                    collectSystemInfo();
+                }, 60000); // 60000 milliseconds = 1 minute
+            });
+        </script>
+        
         <section id="stadiums">
             {% for stadium in stadiums %}
             <div class="stadium">

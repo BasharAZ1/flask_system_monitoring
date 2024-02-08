@@ -1,11 +1,10 @@
 from models import db, Memory, Cpu, Disk
-from flask import render_template
+from flask import render_template, current_app
 import psutil 
 import time
 
 
 def homepage():
-    collect_system_info()
     return render_template("index.html")
 
 def CPU_Usage():

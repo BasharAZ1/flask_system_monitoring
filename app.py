@@ -3,8 +3,6 @@ from flask_migrate import Migrate
 from urls import configure_routes
 from models import db
 import os
-import threading
-from views import collect_system_info
 
 
 app = Flask(__name__)
@@ -17,7 +15,4 @@ migrate = Migrate(app, db)
 configure_routes(app)
 
 if __name__ == "__main__":
-    # monitoring_thread = threading.Thread(target=collect_system_info)
-    # monitoring_thread.start()
-
     app.run(debug=True)
