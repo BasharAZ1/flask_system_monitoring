@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<title>W3.CSS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<body>
+
+<div class="w3-container">
+  <h2>CPU Usage</h2>
+  <p> Cpu counts: {{cpu_counts}}</p>
+  <table class="w3-table-all w3-hoverable">
+    <thead>
+      <tr class="w3-light-grey">
+        <th>id</th>
+        <th>measurement_time</th>
+        <th>times_system</th>
+        <th>times_idle</th>
+        <th>usage_percent</th>
+
+      </tr>
+    </thead>
+  {% for cur_cpu in cpu_list %}
+    <tr>
+      <td>{{cur_cpu.id}}</td>
+      <td>{{cur_cpu.measurement_time}}</td>
+      <td>{{cur_cpu.times_system}}</td>
+      <td>{{cur_cpu.times_idle}}</td>
+      <td>{{cur_cpu.usage_percent}}</td>
+    </tr>
+  {% endfor %}
+  </table>
+</div>
+<script>
+  function fetchCPUData() {
+    fetch('/cpu_usage_data')
+      .then(response => response.json())
+      .then(data => {
+        document.querySelector('p').innerHTML = 'Cpu counts: ' + data.cpu_counts;
+        const tbody = document.querySelector('table tbody');
+        tbody.innerHTML = ''; 
+        data.cpu_list.forEach((cur_cpu) => {
+          const row = `<tr>
+            <td>${cur_cpu.id}</td>
+            <td>${cur_cpu.measurement_time}</td>
+            <td>${cur_cpu.times_system}</td>
+            <td>${cur_cpu.times_idle}</td>
+            <td>${cur_cpu.usage_percent}</td>
+          </tr>`;
+          tbody.innerHTML += row;
+        });
+      });
+  }
+  
+  // Fetch data every 60 seconds
+  setInterval(fetchCPUData, 60000);
+  
+  // Fetch data on initial load
+  fetchCPUData();
+  </script>
+</body>
+</html>

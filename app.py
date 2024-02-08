@@ -3,6 +3,8 @@ from flask_migrate import Migrate
 from urls import configure_routes
 from models import db
 import os
+from apscheduler.schedulers.background import BackgroundScheduler
+
 
 
 app = Flask(__name__)
@@ -15,4 +17,5 @@ migrate = Migrate(app, db)
 configure_routes(app)
 
 if __name__ == "__main__":
+
     app.run(debug=True)
