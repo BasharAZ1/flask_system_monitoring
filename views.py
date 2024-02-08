@@ -5,10 +5,7 @@ import psutil
 
 
 def homepage(is_logged_in=False,is_admin=False):
-    memory = psutil.virtual_memory()
-    memory_utilization_percentage = memory.percent
 
-    print(f"Memory Utilization Percentage: {memory_utilization_percentage}%")
     return render_template("index.html")
 
 
@@ -17,32 +14,16 @@ def homepage(is_logged_in=False,is_admin=False):
 
 
 def collect_system_info():
-    pass
-def collect_memory():
     memory_inf = psutil.virtual_memory()
-    memory_inf.percent
-    memory_inf.available
-    memory_inf.percent
-    memory_inf.used
-    memory_inf.free
-    memory_inf.active
-    memory_inf.inactive
-    memory_inf.wired
-    m=memory("")
+    disk_usage = psutil.disk_usage("/")
+    m=Memory(total=memory_inf.total,used=memory_inf.used,active=memory_inf.active,inactive= memory_inf.inactive,usage_percent=memory_inf.percent)
+    d=Disk(total=disk_usage.total,used=disk_usage.total / (1024**3),free=disk_usage.used / (1024**3),usage_percent=disk_usage.free / (1024**3))
+    
+    db.session.add(m)
+    db.session.add(d)
+    db.session.commit()
+    
 
-    
-    
-def collect_diskspace():
-    path = "/"
-    disk_usage = psutil.disk_usage(path)
-    print(f"Total Disk Space: {disk_usage.total / (1024**3):.2f} GB")
-    print(f"Used Disk Space: {disk_usage.used / (1024**3):.2f} GB")
-    print(f"Free Disk Space: {disk_usage.free / (1024**3):.2f} GB")
-    print(f"Disk Usage Percentage: {disk_usage.percent}%")
-    
-    
-def set_active_processes():
-    pass
     
     
     
