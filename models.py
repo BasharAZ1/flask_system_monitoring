@@ -15,7 +15,6 @@ class Cpu(db.Model):
 class Memory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     measurement_time = db.Column(db.String(50), unique=True, nullable=False, default=lambda: datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'))
-    total = db.Column(db.Integer, unique=False, nullable=False)
     used = db.Column(db.Integer, unique=False, nullable=False)
     active = db.Column(db.Integer, unique=False, nullable=False)
     inactive = db.Column(db.Integer, unique=False, nullable=False)
@@ -24,7 +23,6 @@ class Memory(db.Model):
 class Disk(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     measurement_time = db.Column(db.String(50), unique=True, nullable=False, default=lambda: datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'))
-    total = db.Column(db.Integer, unique=False, nullable=False)
     used = db.Column(db.Integer, unique=False, nullable=False)
     free = db.Column(db.Integer, unique=False, nullable=False)
     usage_percent = db.Column(db.Float, unique=False, nullable=False)
