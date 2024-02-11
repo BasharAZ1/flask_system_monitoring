@@ -1,4 +1,4 @@
-from models import db, Memory, Cpu, Disk
+from models import db, Memory, Cpu, Disk, Active_processes
 from flask import jsonify, render_template, current_app
 import psutil 
 import time
@@ -10,12 +10,12 @@ def homepage():
 
 def CPU_Usage():
     cpu_cores=psutil.cpu_count()
-    cpu_data = Cpu.query.all()
+    cpu_data = Cpu.query.filter(host_ip='localhost')
     return render_template("cpu_usage.html", cpu_counts=cpu_cores,cpu_list=cpu_data)
 
 def cpu_usage_data():
     cpu_cores = psutil.cpu_count()
-    cpu_data = Cpu.query.all()
+    cpu_data = Cpu.query.filter(host_ip='localhost')
     cpu_data_list = [{
         'id': cur_cpu.id,
         'measurement_time': cur_cpu.measurement_time,
@@ -28,11 +28,11 @@ def cpu_usage_data():
 def Memory_Utilization():
     mem_info_gb = psutil.virtual_memory().total/(1024 ** 3)
     mem_info_gb_formatted = "{:.2f} GB".format(mem_info_gb)
-    mem_data = Memory.query.all()
+    mem_data = Memory.query.filter(host_ip='localhost')
     return render_template("memory_utilization.html", total_memory=mem_info_gb_formatted,mem_list=mem_data)
 
 def memory_utilization_data():
-    mem_data = Memory.query.order_by(Memory.id.desc()).all()  
+    mem_data = Memory.query.order_by(Memory.id.desc()).filter(host_ip='localhost')
     data = [{
         'id': mem.id,
         'measurement_time': mem.measurement_time,
@@ -44,11 +44,11 @@ def memory_utilization_data():
     return jsonify(data)
     
 def Disk_Space():
-    Disk_data=Disk.query.all()
+    Disk_data=Disk.query.filter(host_ip='localhost')
     return render_template("disk_space.html", total_space=psutil.disk_usage('/').total,disk_list=Disk_data)
 
 def disk_space_data():
-    disk_data = Disk.query.order_by(Disk.id.desc()).all() 
+    disk_data = Disk.query.order_by(Disk.id.desc()).filter(host_ip='localhost')
     data = [{
         'id': disk.id,
         'measurement_time': disk.measurement_time,
@@ -62,13 +62,16 @@ def disk_space_data():
 
 
 def Active_Processes():
-    return render_template("active_processes.html")
+    active_processes_data = Active_processes.query.filter(host_ip='localhost')
+    return render_template("active_processes.html", active_processes_data=active_processes_data)
 
 def active_processes_data():
-    pass
-
-
-
-
-
-
+    active_processes = Active_processes.query.filter(host_ip='localhost')
+    active__list = [{
+        'pid': procces.pid,
+        'measurement_time': procces.measurement_time,
+        'name': procces.name,
+        'status': procces.status,
+        'start_date': procces.start_date,
+    } for procces in active_processes]
+    return jsonify({ 'active_processes_data': active__list})

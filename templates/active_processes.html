@@ -39,5 +39,34 @@
   </table>
 </div>
 
+<script>
+  function fetchActiveProcessData() {
+    fetch('/active_processes_data')
+      .then(response => response.json())
+      .then(data => {
+        document.querySelector('p').innerHTML = 'Active Processes Count: ' + data.process_counts;
+        const tbody = document.querySelector('table tbody');
+        tbody.innerHTML = '';
+        data.process_list.forEach((process) => {
+          const row = <tr>
+            <td>${process.id}</td>
+            <td>${process.measurement_time}</td>
+            <td>${process.pid}</td>
+            <td>${process.name}</td>
+            <td>${process.status}</td>
+            <td>${process.start_date}</td>
+          </tr>;
+          tbody.innerHTML += row;
+        });
+      });
+  }
+
+  // Fetch data every 60 seconds
+  setInterval(fetchActiveProcessData, 60000);
+
+  // Fetch data on initial load
+  fetchActiveProcessData();
+</script>
+
 </body>
 </html>

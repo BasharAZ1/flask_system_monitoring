@@ -1,8 +1,8 @@
-"""init db
+"""empty message
 
-Revision ID: f6abeecf24d2
+Revision ID: 62b584363676
 Revises: 
-Create Date: 2024-02-11 15:08:10.945635
+Create Date: 2024-02-11 16:00:51.060348
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f6abeecf24d2'
+revision = '62b584363676'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,6 +25,7 @@ def upgrade():
     sa.Column('name', sa.String(length=100), nullable=False),
     sa.Column('status', sa.String(length=50), nullable=False),
     sa.Column('start_date', sa.String(length=50), nullable=False),
+    sa.Column('host_ip', sa.String(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('measurement_time'),
     sa.UniqueConstraint('pid')
@@ -36,6 +37,7 @@ def upgrade():
     sa.Column('times_system', sa.Float(), nullable=False),
     sa.Column('times_idle', sa.Float(), nullable=False),
     sa.Column('usage_percent', sa.Float(), nullable=False),
+    sa.Column('host_ip', sa.String(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('measurement_time')
     )
@@ -45,6 +47,7 @@ def upgrade():
     sa.Column('used', sa.Integer(), nullable=False),
     sa.Column('free', sa.Integer(), nullable=False),
     sa.Column('usage_percent', sa.Float(), nullable=False),
+    sa.Column('host_ip', sa.String(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('measurement_time')
     )
@@ -55,6 +58,7 @@ def upgrade():
     sa.Column('active', sa.Integer(), nullable=False),
     sa.Column('inactive', sa.Integer(), nullable=False),
     sa.Column('usage_percent', sa.Float(), nullable=False),
+    sa.Column('host_ip', sa.String(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('measurement_time')
     )
