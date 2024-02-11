@@ -6,6 +6,7 @@ import os
 import psutil 
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
+import paramiko
 
 
 app = Flask(__name__)
@@ -18,11 +19,7 @@ migrate = Migrate(app, db)
 configure_routes(app)
 
 def collect_virtual_info():
- pass
-
-
-
-
+    pass
 
 
 def collect_system_info():

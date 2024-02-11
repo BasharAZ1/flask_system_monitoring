@@ -4,8 +4,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <body>
-
 <div class="w3-container">
+  <br>
+  <form>
+    <div style="display: flex; justify-content: flex-end;">
+      <input type="button" value="&#8962; Home" onclick="history.back()" class="btn">
+    </div>
+  </form>
+
   <h2>Memory Utilization</h2>
 
   <p> Total Memory: {{total_memory}}</p>
@@ -14,59 +20,49 @@
 
     <thead>
       <tr class="w3-light-grey">
-        <th>PID</th>
-        <th>Name</th>
-        <th>Status</th>
-        <th>Start_Date</th>
-
+        <th>id</th>
+        <th>measurement_time</th>
+        <th>used</th>
+        <th>active</th>
+        <th>inactive</th>
+        <th>usage_percent</th>
       </tr>
     </thead>
+  {% for cur_memory in mem_list %}
     <tr>
-      <td>123</td>
-      <td>p1</td>
-      <td>456</td>
-      <td>789</td>
+      <td>{{cur_memory.id}}</td>
+      <td>{{cur_memory.measurement_time}}</td>
+      <td>{{cur_memory.used}}</td>
+      <td>{{cur_memory.active}}</td>
+      <td>{{cur_memory.inactive}}</td>
+      <td>{{cur_memory.usage_percent}}</td>
     </tr>
-    <tr>
-      <td>321</td>
-      <td>p2</td>
-      <td>543</td>
-      <td>421</td>
-    </tr>
-    <tr>
-      <td>678</td>
-      <td>p4</td>
-      <td>999</td>
-      <td>67</td>
-    </tr>
+  {% endfor %}
   </table>
 </div>
 <br>
 
-<!--<button class="btn"><i class="fa fa-home"></i>HOME</button>-->
-<form>
- <input type="button" value="Home" onclick="history.back()">
-</form>
+
 <script>
   function fetchMemoryData() {
       fetch('/memory_data')
           .then(response => response.json())
           .then(data => {
-              const list = data.map(mem => 
+              const list = data.map(mem =>
                   `<li>Time: ${mem.measurement_time}, Used: ${mem.used}, Active: ${mem.active}, Inactive: ${mem.inactive}, Usage: ${mem.usage_percent}%</li>`
               ).join('');
               document.getElementById('dynamic-memory-info').innerHTML = `<ul>${list}</ul>`;
           })
           .catch(error => console.error('Error fetching memory data:', error));
   }
-  
+
   // Fetch memory data every 60 seconds
   setInterval(fetchMemoryData, 60000);
-  
+
   // Fetch data on initial load
   fetchMemoryData();
   </script>
-  
+
 
 </body>
 </html>

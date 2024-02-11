@@ -6,6 +6,13 @@
 <body>
 
 <div class="w3-container">
+  <br>
+  <form>
+    <div style="display: flex; justify-content: flex-end;">
+      <input type="button" value="&#8962; Home" onclick="history.back()" class="btn">
+    </div>
+  </form>
+
   <h2>CPU Usage</h2>
   <p> Cpu counts: {{cpu_counts}}</p>
   <table class="w3-table-all w3-hoverable">
@@ -37,7 +44,7 @@
       .then(data => {
         document.querySelector('p').innerHTML = 'Cpu counts: ' + data.cpu_counts;
         const tbody = document.querySelector('table tbody');
-        tbody.innerHTML = ''; 
+        tbody.innerHTML = '';
         data.cpu_list.forEach((cur_cpu) => {
           const row = `<tr>
             <td>${cur_cpu.id}</td>
@@ -50,10 +57,10 @@
         });
       });
   }
-  
+
   // Fetch data every 60 seconds
   setInterval(fetchCPUData, 60000);
-  
+
   // Fetch data on initial load
   fetchCPUData();
   </script>
