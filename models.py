@@ -31,6 +31,6 @@ class Active_processes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     measurement_time = db.Column(db.String(50), unique=True, nullable=False, default=lambda: datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f'))
     pid = db.Column(db.Integer, unique=True, nullable=False)
-    name = db.Column(db.String(50), unique=True, nullable=False)
+    name = db.Column(db.String(100),unique=False,nullable=False)
     status = db.Column(db.String(50), unique=False, nullable=False)
     start_date = db.Column(db.String(50), unique=False, nullable=False)
