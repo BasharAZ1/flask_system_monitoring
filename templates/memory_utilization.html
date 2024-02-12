@@ -38,22 +38,33 @@
       <td>{{cur_memory.usage_percent}}</td>
     </tr>
   {% endfor %}
-  </table>
+  </table >
 </div>
 <br>
 
 
 <script>
   function fetchMemoryData() {
-      fetch('/memory_data')
-          .then(response => response.json())
-          .then(data => {
-              const list = data.map(mem =>
-                  `<li>Time: ${mem.measurement_time}, Used: ${mem.used}, Active: ${mem.active}, Inactive: ${mem.inactive}, Usage: ${mem.usage_percent}%</li>`
-              ).join('');
-              document.getElementById('dynamic-memory-info').innerHTML = `<ul>${list}</ul>`;
-          })
-          .catch(error => console.error('Error fetching memory data:', error));
+    fetch('/memory_data')
+      .then(response => response.json())
+      .then(data => {
+        const tbody = document.querySelector('table tbody');
+        tbody.innerHTML = ''; // Clear existing rows
+        data.mem_list.forEach((cur_memory) => {
+          const row = `<tr>
+            <td>${cur_memory.id}</td>
+            <td>${cur_memory.measurement_time}</td>
+            <td>${cur_memory.used}</td>
+            <td>${cur_memory.active}</td>
+            <td>${cur_memory.inactive}</td>
+            <td>${cur_memory.usage_percent}%</td>
+          </tr>`;
+          tbody.innerHTML += row;
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching memory data:', error);
+      });
   }
 
   // Fetch memory data every 60 seconds
@@ -61,8 +72,7 @@
 
   // Fetch data on initial load
   fetchMemoryData();
-  </script>
-
+</script>
 
 </body>
 </html>

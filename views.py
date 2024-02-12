@@ -42,7 +42,7 @@ def memory_utilization_data(host='localhost'):
         'inactive': mem.inactive,
         'usage_percent': mem.usage_percent,
     } for mem in mem_data]
-    return jsonify(data)
+    return jsonify({'mem_list':data,'total_memory':0})
     
 def Disk_Space(host='localhost'):
     Disk_data=Disk.query.filter(Disk.host_ip==host).all()
@@ -57,7 +57,7 @@ def disk_space_data(host='localhost'):
         'free': disk.free,
         'usage_percent': disk.usage_percent,
     } for disk in Disk_data]
-    return jsonify(data)
+    return jsonify({'disk_list':data})
 
 
 
@@ -67,12 +67,12 @@ def Active_Processes(host='localhost'):
     return render_template("active_processes.html", active_processes_list=active_processes_data)
 
 def active_processes_data(host='localhost'):
-    active_processes = Active_processes.query.filter(host_ip=host)
+    active_processes_data = Active_processes.query.filter(Active_processes.host_ip==host).all()
     active__list = [{
         'pid': procces.pid,
         'measurement_time': procces.measurement_time,
         'name': procces.name,
         'status': procces.status,
         'start_date': procces.start_date,
-    } for procces in active_processes]
-    return jsonify({ 'active_processes_data': active__list})
+    } for procces in active_processes_data]
+    return jsonify({'active_processes_list': active__list})

@@ -6,7 +6,7 @@ import os
 import psutil 
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
-import paramiko
+
 
 
 app = Flask(__name__)
@@ -49,7 +49,7 @@ def collect_system_info():
     
     
 scheduler = BackgroundScheduler(daemon=True)
-scheduler.add_job(func=collect_system_info, trigger="interval", seconds=10)
+scheduler.add_job(func=collect_system_info, trigger="interval", seconds=1000)
 scheduler.start()
 if __name__ == "__main__":
     app.run(debug=True,use_reloader=False)

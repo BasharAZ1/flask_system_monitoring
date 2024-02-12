@@ -39,24 +39,35 @@
   {% endfor %}
   </table>
 </div>
-<script>
-  function fetchDiskData() {
+
+  <script>
+    function fetchDiskData() {
       fetch('/disk_data')
-          .then(response => response.json())
-          .then(data => {
-              const list = data.map(disk =>
-                  `<li>Time: ${disk.measurement_time}, Used: ${disk.used}, Free: ${disk.free}, Usage: ${disk.usage_percent}%</li>`
-              ).join('');
-              document.getElementById('dynamic-disk-info').innerHTML = `<ul>${list}</ul>`;
-          })
-          .catch(error => console.error('Error fetching disk data:', error));
-  }
-
-  // Fetch disk data every 60 seconds
-  setInterval(fetchDiskData, 60000);
-
-  // Fetch data on initial load
-  fetchDiskData();
+        .then(response => response.json())
+        .then(data => {
+          const tbody = document.querySelector('table tbody');
+          tbody.innerHTML = ''; // Clear existing rows
+          data.disk_list.forEach((disk) => {
+            const row = `<tr>
+              <td>${disk.id}</td>
+              <td>${disk.measurement_time}</td>
+              <td>${disk.used}</td>
+              <td>${disk.free}</td>
+              <td>${disk.usage_percent}%</td>
+            </tr>`;
+            tbody.innerHTML += row;
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching memory data:', error);
+        });
+    }
+  
+    // Fetch memory data every 60 seconds
+    setInterval(fetchDiskData, 10000);
+  
+    // Fetch data on initial load
+    fetchDiskData();
   </script>
 
 </body>

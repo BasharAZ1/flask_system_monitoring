@@ -30,13 +30,40 @@
     <tr>
       <td>{{cur_active_process.id}}</td>
       <td>{{cur_active_process.measurement_time}}</td>
-      <td>{{cur_active_process.used}}</td>
-      <td>{{cur_active_process.free}}</td>
-      <td>{{cur_active_process.usage_percent}}</td>
+      <td>{{cur_active_process.pid}}</td>
+      <td>{{cur_active_process.name}}</td>
+      <td>{{cur_active_process.status}}</td>
+      <td>{{cur_active_process.start_date}}</td>
     </tr>
   {% endfor %}
   </table>
 </div>
+<script>
+  function fetchProcData() {
+    fetch('/active_processes_data')
+      .then(response => response.json())
+      .then(data => {
+        const tbody = document.querySelector('table tbody');
+        tbody.innerHTML = '';
+        data.active_processes_list.forEach((proc) => {
+          const row = `<tr>
+            <td>${proc.id}</td>
+            <td>${proc.measurement_time}</td>
+            <td>${proc.pid}</td>
+            <td>${proc.name}</td>
+            <td>${proc.status}</td>
+            <td>${proc.start_date}</td>
+          </tr>`;
+          tbody.innerHTML += row;
+        });
+      });
+  }
 
+  // Fetch data every 60 seconds
+  setInterval(fetchProcData, 10000);
+
+  // Fetch data on initial load
+  fetchProcData();
+  </script>
 </body>
 </html>
