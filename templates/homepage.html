@@ -20,18 +20,16 @@
     <a class="w3-bar-item w3-button w3-hover-black w3-hide-medium w3-hide-large w3-right" href="javascript:void(0);" onclick="toggleFunction()" title="Toggle Navigation Menu">
       <i class="fa fa-bars"></i>
     </a>
-    <a href="CPU_Usage" class="w3-bar-item w3-button">CPU Usage</a>
-    <a href="Memory_Utilization" class="w3-bar-item w3-button">Memory Utilization</a>
-    <a href="Disk_Space" class="w3-bar-item w3-button">Disk Space</a>
-    <a href="Active_Processes" class="w3-bar-item w3-button">Active Processes</a>
+    <a href="cpu_usage" class="w3-bar-item w3-button">CPU Usage</a>
+    <a href="memory_utilization" class="w3-bar-item w3-button">Memory Utilization</a>
+    <a href="disk_space" class="w3-bar-item w3-button">Disk Space</a>
+    <a href="active_processes" class="w3-bar-item w3-button">Active Processes</a>
     <a href="#" class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-red">
       <a id="hostnameLabel" href="#" class="w3-bar-item w3-button">{{ hostname }}</a>
-
 
       <i class="fa fa-search"></i>
     </a>
   </div>
-
 
   <form id="sshForm" action="/ssh-connect" method="post">
     Hostname: <input type="text" name="hostname"><br>
@@ -39,7 +37,6 @@
     Password: <input type="password" name="password"><br>
     <input type="submit" value="Connect via SSH">
 </form>
-
 
   {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
@@ -95,8 +92,6 @@ function toggleFunction() {
 }
 </script>
 
-
-  
 
 </body>
 </html>

@@ -13,6 +13,7 @@ class Cpu(db.Model):
     usage_percent = db.Column(db.Float, unique=False, nullable=False)
     host_ip = db.Column(db.String, unique=False, nullable=False)
 
+
 class Memory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     measurement_time = db.Column(db.String(50), unique=True, nullable=False, default=lambda: datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f'))
@@ -22,6 +23,7 @@ class Memory(db.Model):
     usage_percent = db.Column(db.Float, unique=False, nullable=False)
     host_ip = db.Column(db.String, unique=False, nullable=False)
 
+
 class Disk(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     measurement_time = db.Column(db.String(50), unique=True, nullable=False, default=lambda: datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f'))
@@ -30,7 +32,8 @@ class Disk(db.Model):
     usage_percent = db.Column(db.Float, unique=False, nullable=False)
     host_ip = db.Column(db.String, unique=False, nullable=False)
     
-class Active_processes(db.Model):
+    
+class ActiveProcesses(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     measurement_time = db.Column(db.String(50), unique=True, nullable=False, default=lambda: datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f'))
     pid = db.Column(db.Integer, unique=True, nullable=False)
