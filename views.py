@@ -1,12 +1,13 @@
 from models import db, Memory, Cpu, Disk, Active_processes
-from flask import jsonify, render_template, current_app
+from flask import jsonify, render_template,request,session,flash,redirect,url_for
 import psutil 
-import time
+import paramiko
 
 
 
 def homepage():
-    return render_template("homepage.html")
+    hostname = session.get('hostname', 'Local')  
+    return render_template("homepage.html", hostname=hostname)
 
 def CPU_Usage(host='localhost'):
     cpu_cores=psutil.cpu_count()
@@ -76,3 +77,24 @@ def active_processes_data(host='localhost'):
         'start_date': procces.start_date,
     } for procces in active_processes_data]
     return jsonify({'active_processes_list': active__list})
+
+
+
+
+
+def ssh_connect():
+    hostname = request.form['hostname']
+    username = request.form['username']
+    password = request.form['password']  # Hardcoded for demonstration, replace with your actual password
+
+    try:
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(hostname, username=username, password=password)
+        ssh.close() 
+        session['hostname'] = hostname
+        flash('SSH connection successful.', 'success')
+        return redirect(url_for('homepage'))
+    except Exception as e:
+        flash('SSH connection successful.', 'fail')
+    return redirect(url_for('homepage'))

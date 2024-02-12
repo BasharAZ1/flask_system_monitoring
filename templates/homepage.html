@@ -25,9 +25,29 @@
     <a href="Disk_Space" class="w3-bar-item w3-button">Disk Space</a>
     <a href="Active_Processes" class="w3-bar-item w3-button">Active Processes</a>
     <a href="#" class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-red">
+      <a id="hostnameLabel" href="#" class="w3-bar-item w3-button">{{ hostname }}</a>
+
+
       <i class="fa fa-search"></i>
     </a>
   </div>
+
+
+  <form id="sshForm" action="/ssh-connect" method="post">
+    Hostname: <input type="text" name="hostname"><br>
+    Username: <input type="text" name="username"><br>
+    Password: <input type="password" name="password"><br>
+    <input type="submit" value="Connect via SSH">
+</form>
+
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert {{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
 
 <!--  &lt;!&ndash; Navbar on small screens &ndash;&gt;-->
 <!--  <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium">-->
@@ -47,7 +67,6 @@
 
 
 <script>
-// Modal Image Gallery
 function onClick(element) {
   document.getElementById("img01").src = element.src;
   document.getElementById("modal01").style.display = "block";
@@ -66,7 +85,6 @@ function myFunction() {
     }
 }
 
-// Used to toggle the menu on small screens when clicking on the menu button
 function toggleFunction() {
     var x = document.getElementById("navDemo");
     if (x.className.indexOf("w3-show") == -1) {
@@ -76,6 +94,9 @@ function toggleFunction() {
     }
 }
 </script>
+
+
+  
 
 </body>
 </html>

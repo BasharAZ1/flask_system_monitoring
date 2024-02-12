@@ -1,4 +1,4 @@
-from views import homepage, CPU_Usage, Memory_Utilization, Disk_Space, Active_Processes,cpu_usage_data,active_processes_data,disk_space_data,memory_utilization_data
+from views import homepage, CPU_Usage, Memory_Utilization, Disk_Space, Active_Processes,cpu_usage_data,active_processes_data,disk_space_data,memory_utilization_data,ssh_connect
 
 
 def configure_routes(app):
@@ -11,4 +11,5 @@ def configure_routes(app):
     app.add_url_rule('/memory_data', 'memory_data', memory_utilization_data)
     app.add_url_rule('/disk_data', 'disk_data', disk_space_data)
     app.add_url_rule('/active_processes_data', 'active_processes_data', active_processes_data)
+    app.add_url_rule('/ssh-connect', 'ssh-connec', ssh_connect,methods=[ "POST"])
     
