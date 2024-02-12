@@ -37,6 +37,7 @@
   {% endfor %}
   </table>
 </div>
+
 <script>
   function fetchCPUData() {
     fetch('/cpu_usage_data')
@@ -59,7 +60,7 @@
   }
 
   // Fetch data every 60 seconds
-  setInterval(fetchCPUData, 60000);
+  setInterval(fetchCPUData, 10000);
 
   // Fetch data on initial load
   fetchCPUData();

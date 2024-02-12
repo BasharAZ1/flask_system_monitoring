@@ -42,7 +42,6 @@
 </div>
 <br>
 
-
 <script>
   function fetchMemoryData() {
     fetch('/memory_data')
@@ -68,7 +67,7 @@
   }
 
   // Fetch memory data every 60 seconds
-  setInterval(fetchMemoryData, 60000);
+  setInterval(fetchMemoryData, 10000);
 
   // Fetch data on initial load
   fetchMemoryData();

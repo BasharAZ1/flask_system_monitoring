@@ -1,8 +1,7 @@
-from models import db, Memory, Cpu, Disk, Active_processes
-from flask import jsonify, render_template,request,session,flash,redirect,url_for
+from models import Memory, Cpu, Disk, Active_processes
+from flask import jsonify, render_template, request, session, flash, redirect, url_for
 import psutil 
 import paramiko
-
 
 
 def homepage():
@@ -60,9 +59,6 @@ def disk_space_data(host='localhost'):
     } for disk in Disk_data]
     return jsonify({'disk_list':data})
 
-
-
-
 def Active_Processes(host='localhost'):
     active_processes_data = Active_processes.query.filter(Active_processes.host_ip==host).all()
     return render_template("active_processes.html", active_processes_list=active_processes_data)
@@ -78,14 +74,10 @@ def active_processes_data(host='localhost'):
     } for procces in active_processes_data]
     return jsonify({'active_processes_list': active__list})
 
-
-
-
-
 def ssh_connect():
     hostname = request.form['hostname']
     username = request.form['username']
-    password = request.form['password']  # Hardcoded for demonstration, replace with your actual password
+    password = request.form['password']
 
     try:
         ssh = paramiko.SSHClient()

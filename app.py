@@ -8,7 +8,6 @@ from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default_fallback_secret_key')
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///site.db"
@@ -20,7 +19,6 @@ configure_routes(app)
 
 def collect_virtual_info():
     pass
-
 
 def collect_system_info():
  with app.app_context():
@@ -46,10 +44,10 @@ def collect_system_info():
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                 pass
     db.session.commit()
-    
-    
+
 scheduler = BackgroundScheduler(daemon=True)
-scheduler.add_job(func=collect_system_info, trigger="interval", seconds=1000)
+scheduler.add_job(func=collect_system_info, trigger="interval", seconds=10)
 scheduler.start()
+
 if __name__ == "__main__":
     app.run(debug=True,use_reloader=False)
