@@ -137,7 +137,5 @@ def set_localhost():
 
 
 
-def bytes_to_gb(bytes):
-    return bytes / (1024.0 ** 3)
 
 
