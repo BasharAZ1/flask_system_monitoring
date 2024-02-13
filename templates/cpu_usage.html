@@ -20,6 +20,7 @@
       <tr class="w3-light-grey">
         <th>ID</th>
         <th>Measurement Time</th>
+        <th>Time User</th>
         <th>Times System</th>
         <th>Times Idle</th>
         <th>Usage Percent</th>
@@ -42,6 +43,7 @@
           const row = `<tr>
             <td>${cur_cpu.id}</td>
             <td>${cur_cpu.measurement_time}</td>
+            <td>${cur_cpu.times_user}</td>
             <td>${cur_cpu.times_system}</td>
             <td>${cur_cpu.times_idle}</td>
             <td>${cur_cpu.usage_percent}</td>

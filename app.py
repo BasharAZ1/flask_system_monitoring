@@ -24,6 +24,9 @@ DEFAULT_HOSTNAME = 'localhost'
 hostname_changed_event = threading.Event()
 shared.current_hostname = DEFAULT_HOSTNAME
 
+def bytes_to_gb(bytes):
+    return bytes / (1024.0 ** 3)
+
 
 def collect_remote_system_info(ssh_client):
     try:
@@ -66,12 +69,20 @@ def collect_system_info(hostname=DEFAULT_HOSTNAME):
             disk_usage = psutil.disk_usage("/")
             cpu_times = psutil.cpu_times()
 
-            memory_data = Memory(used=virtual_memory.used, active=virtual_memory.active, inactive=virtual_memory.inactive,
-                                usage_percent=virtual_memory.percent, host_ip=hostname)
-            disk_data = Disk(used=disk_usage.used / (1024**3), free=disk_usage.free / (1024**3),
-                            usage_percent=disk_usage.percent, host_ip=hostname)
-            cpu_data = Cpu(times_user=cpu_times.user, times_system=cpu_times.system, times_idle=cpu_times.idle,
-                            usage_percent=psutil.cpu_percent(interval=1), host_ip=hostname)
+            memory_data = Memory(used=round(bytes_to_gb(virtual_memory.used),2), 
+                                 active=round(bytes_to_gb(virtual_memory.active),2),
+                                 inactive=round(bytes_to_gb(virtual_memory.inactive),2),
+                                usage_percent=virtual_memory.percent,
+                                host_ip=hostname)
+            disk_data = Disk(used=round(bytes_to_gb(disk_usage.used),2),
+                             free=round(bytes_to_gb(disk_usage.free ),2) ,
+                            usage_percent=disk_usage.percent,
+                            host_ip=hostname)
+            cpu_data = Cpu(times_user=round(cpu_times.user,2),
+                           times_system=round(cpu_times.system,2), 
+                           times_idle=round(cpu_times.idle,2),
+                            usage_percent=psutil.cpu_percent(interval=1),
+                            host_ip=hostname)
 
             db.session.query(ActiveProcesses).delete()
             for proc in psutil.process_iter(attrs=['pid', 'name', 'status', 'create_time']):
@@ -121,7 +132,7 @@ start_background_thread()
 @app.route('/change_hostname/<new_hostname>', methods=['POST'])
 def change_hostname(new_hostname):
     shared.current_hostname = new_hostname
-    hostname_changed_event.set()  # Set the Event to notify the thread
+    hostname_changed_event.set()  
     return f"Hostname changed to {new_hostname}"
 
 
