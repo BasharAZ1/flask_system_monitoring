@@ -2,16 +2,18 @@ from models import Memory, Cpu, Disk, ActiveProcesses
 from flask import jsonify, render_template, request, session, flash, redirect, url_for
 import psutil 
 import paramiko
+import shared
 
 
 DEFAULT_HOSTNAME = 'localhost'
 
 def homepage():
-    hostname = session.get('hostname', DEFAULT_HOSTNAME)  
+    hostname = shared.current_hostname
     return render_template("homepage.html", hostname=hostname)
 
 
-def cpu_usage(host=DEFAULT_HOSTNAME):
+def cpu_usage():
+    host = shared.current_hostname
     cpu_data = Cpu.query.filter(Cpu.host_ip==host).all()
     if host == DEFAULT_HOSTNAME:
         cpu_cores=psutil.cpu_count()
@@ -21,7 +23,8 @@ def cpu_usage(host=DEFAULT_HOSTNAME):
     return render_template("cpu_usage.html", cpu_counts=cpu_cores, cpu_list=cpu_data)
 
 
-def cpu_usage_data(host=DEFAULT_HOSTNAME):
+def cpu_usage_data():
+    host = shared.current_hostname
     cpu_data = Cpu.query.filter(Cpu.host_ip==host).all()
     cpu_data_list = [{
             'id': curr_cpu.id,
@@ -38,7 +41,8 @@ def cpu_usage_data(host=DEFAULT_HOSTNAME):
     return jsonify({'cpu_counts': cpu_cores, 'cpu_list': cpu_data_list})
 
 
-def memory_utilization(host=DEFAULT_HOSTNAME):
+def memory_utilization():
+    host = shared.current_hostname
     mem_data = Memory.query.filter(Memory.host_ip==host).all()
     if host == DEFAULT_HOSTNAME:
         mem_info_gb = psutil.virtual_memory().total/(1024 ** 3)
@@ -49,7 +53,8 @@ def memory_utilization(host=DEFAULT_HOSTNAME):
     return render_template("memory_utilization.html", total_memory=mem_info_gb_formatted, mem_list=mem_data)
 
 
-def memory_utilization_data(host=DEFAULT_HOSTNAME):
+def memory_utilization_data():
+    host = shared.current_hostname
     mem_data = Memory.query.filter(Memory.host_ip==host).all()
     data = [{
         'id': mem.id,
@@ -63,7 +68,8 @@ def memory_utilization_data(host=DEFAULT_HOSTNAME):
     return jsonify({'mem_list':data, 'total_memory':0})
 
 
-def disk_space(host=DEFAULT_HOSTNAME):
+def disk_space():
+    host = shared.current_hostname
     disk_data=Disk.query.filter(Disk.host_ip==host).all()
     if host == DEFAULT_HOSTNAME:
         total_space=psutil.disk_usage('/').total
@@ -73,7 +79,8 @@ def disk_space(host=DEFAULT_HOSTNAME):
     return render_template("disk_space.html", total_space=total_space, disk_list=disk_data)
 
 
-def disk_space_data(host=DEFAULT_HOSTNAME):
+def disk_space_data():
+    host = shared.current_hostname
     disk_data=Disk.query.filter(Disk.host_ip==host).all()
     data = [{
         'id': disk.id,
@@ -86,13 +93,15 @@ def disk_space_data(host=DEFAULT_HOSTNAME):
     return jsonify({'disk_list':data})
 
 
-def active_processes(host=DEFAULT_HOSTNAME):
+def active_processes():
+    host = shared.current_hostname
     active_processes_data = ActiveProcesses.query.filter(ActiveProcesses.host_ip==host).all()
     
     return render_template("active_processes.html", active_processes_list=active_processes_data)
 
 
-def active_processes_data(host=DEFAULT_HOSTNAME):
+def active_processes_data():
+    host = shared.current_hostname
     active_processes_data = ActiveProcesses.query.filter(ActiveProcesses.host_ip==host).all()
     active_list = [{
         'pid': procces.pid,
@@ -115,6 +124,7 @@ def ssh_connect():
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(hostname, username=username, password=password)
         session['hostname'] = hostname
+        shared.current_hostname = hostname
         flash('SSH connection successful.', 'success')
         return redirect(url_for('homepage'))
     except Exception as e:
