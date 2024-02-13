@@ -1,40 +1,32 @@
 <!DOCTYPE html>
 <html>
-<title>W3.CSS</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<head>
+  <title> CPU Usage Monitor </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
 <body>
 
 <div class="w3-container">
   <br>
-  <form>
-    <div style="display: flex; justify-content: flex-end;">
-      <input type="button" value="&#8962; Home" onclick="history.back()" class="btn">
-    </div>
-  </form>
+  <div style="display: flex; justify-content: flex-end;">
+    <button class="btn" onclick="history.back()">&#8962; Home</button>
+  </div>
 
   <h2>CPU Usage</h2>
-  <p> Cpu counts: {{cpu_counts}}</p>
-  <table class="w3-table-all w3-hoverable">
+  <p id="cpu_counts"> CPU Cores Count: </p>
+  <table id="cpu_table" class="w3-table-all w3-hoverable">
     <thead>
       <tr class="w3-light-grey">
-        <th>id</th>
-        <th>measurement_time</th>
-        <th>times_system</th>
-        <th>times_idle</th>
-        <th>usage_percent</th>
-
+        <th>ID</th>
+        <th>Measurement Time</th>
+        <th>Times System</th>
+        <th>Times Idle</th>
+        <th>Usage Percent</th>
       </tr>
     </thead>
-  {% for cur_cpu in cpu_list %}
-    <tr>
-      <td>{{cur_cpu.id}}</td>
-      <td>{{cur_cpu.measurement_time}}</td>
-      <td>{{cur_cpu.times_system}}</td>
-      <td>{{cur_cpu.times_idle}}</td>
-      <td>{{cur_cpu.usage_percent}}</td>
-    </tr>
-  {% endfor %}
+    <tbody id="cpu_table_body">
+    </tbody>
   </table>
 </div>
 
@@ -43,8 +35,8 @@
     fetch('/cpu_usage_data')
       .then(response => response.json())
       .then(data => {
-        document.querySelector('p').innerHTML = 'Cpu counts: ' + data.cpu_counts;
-        const tbody = document.querySelector('table tbody');
+        document.getElementById('cpu_counts').textContent = 'CPU Cores Count: ' + data.cpu_counts;
+        const tbody = document.getElementById('cpu_table_body');
         tbody.innerHTML = '';
         data.cpu_list.forEach((cur_cpu) => {
           const row = `<tr>
@@ -64,6 +56,6 @@
 
   // Fetch data on initial load
   fetchCPUData();
-  </script>
+</script>
 </body>
 </html>

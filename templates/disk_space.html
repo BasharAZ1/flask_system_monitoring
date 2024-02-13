@@ -1,74 +1,67 @@
 <!DOCTYPE html>
 <html>
-<title>W3.CSS</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<head>
+  <title>Disk Space Monitor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
 <body>
 
 <div class="w3-container">
   <br>
-  <form>
-    <div style="display: flex; justify-content: flex-end;">
-      <input type="button" value="&#8962; Home" onclick="history.back()" class="btn">
-    </div>
-  </form>
+  <div style="display: flex; justify-content: flex-end;">
+    <button class="btn" onclick="history.back()">&#8962; Home</button>
+  </div>
 
   <h2>Disk Space</h2>
 
-  <p> Total Space: {{total_space}}</p>
+  <p id="total_space"> Total Space: </p>
 
   <table class="w3-table-all w3-hoverable">
     <thead>
       <tr class="w3-light-grey">
-        <th>id</th>
-        <th>measurement_time</th>
-        <th>used</th>
-        <th>free</th>
-        <th>usage_percent</th>
-
+        <th>ID</th>
+        <th>Measurement Time</th>
+        <th>Used</th>
+        <th>Free</th>
+        <th>Usage Percent</th>
       </tr>
     </thead>
-  {% for cur_disk in disk_list %}
-    <tr>
-      <td>{{cur_disk.id}}</td>
-      <td>{{cur_disk.measurement_time}}</td>
-      <td>{{cur_disk.used}}</td>
-      <td>{{cur_disk.free}}</td>
-      <td>{{cur_disk.usage_percent}}</td>
-    </tr>
-  {% endfor %}
+    <tbody id="disk_table_body">
+    </tbody>
   </table>
 </div>
 
-  <script>
-    function fetchDiskData() {
-      fetch('/disk_data')
-        .then(response => response.json())
-        .then(data => {
-          const tbody = document.querySelector('table tbody');
-          tbody.innerHTML = ''; // Clear existing rows
-          data.disk_list.forEach((disk) => {
-            const row = `<tr>
-              <td>${disk.id}</td>
-              <td>${disk.measurement_time}</td>
-              <td>${disk.used}</td>
-              <td>${disk.free}</td>
-              <td>${disk.usage_percent}%</td>
-            </tr>`;
-            tbody.innerHTML += row;
-          });
-        })
-        .catch(error => {
-          console.error('Error fetching memory data:', error);
-        });
-    }
-  
-    // Fetch memory data every 60 seconds
-    setInterval(fetchDiskData, 10000);
-  
-    // Fetch data on initial load
-    fetchDiskData();
-  </script>
+<script>
+  function fetchDiskData() {
+  fetch('/disk_data')
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('total_space').textContent = 'Total Space: ' + data.total_space;
+      const tbody = document.getElementById('disk_table_body');
+      tbody.innerHTML = '';
+      data.disk_list.forEach((disk) => {
+        const row = `<tr>
+          <td>${disk.id}</td>
+          <td>${disk.measurement_time}</td>
+          <td>${disk.used}</td>
+          <td>${disk.free}</td>
+          <td>${disk.usage_percent}%</td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching disk data:', error);
+    });
+}
 
+// Fetch disk data every 60 seconds
+setInterval(fetchDiskData, 10000);
+
+// Fetch data on initial load
+fetchDiskData();
+</script>
 </body>
 </html>

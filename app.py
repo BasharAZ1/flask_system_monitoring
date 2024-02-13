@@ -1,4 +1,4 @@
-from flask import Flask, session
+from flask import Flask
 from flask_migrate import Migrate
 from urls import configure_routes
 from models import db, Memory, Cpu, Disk, ActiveProcesses
@@ -88,12 +88,9 @@ def collect_system_info(hostname=DEFAULT_HOSTNAME):
         else:
             ssh = paramiko.SSHClient()
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            print('here')
             try:
-                print('what about here?')
                 ssh.connect(hostname, username=username, password=password)
-                print('or here?')
-                memory_data, disk_data, cpu_data = collect_remote_system_info(ssh)
+                #memory_data, disk_data, cpu_data = collect_remote_system_info(ssh)
             
             except Exception as e:
                 print("Error:", e)

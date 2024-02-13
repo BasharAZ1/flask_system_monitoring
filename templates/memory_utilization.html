@@ -1,77 +1,69 @@
 <!DOCTYPE html>
 <html>
-<title>W3.CSS</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<head>
+  <title>Memory Utilization</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
 <body>
+
 <div class="w3-container">
   <br>
-  <form>
-    <div style="display: flex; justify-content: flex-end;">
-      <input type="button" value="&#8962; Home" onclick="history.back()" class="btn">
-    </div>
-  </form>
+  <div style="display: flex; justify-content: flex-end;">
+    <button class="btn" onclick="history.back()">&#8962; Home</button>
+  </div>
 
   <h2>Memory Utilization</h2>
 
-  <p> Total Memory: {{total_memory}}</p>
+  <p id="total_memory"> Total Memory: </p>
 
   <table class="w3-table-all w3-hoverable">
-
     <thead>
       <tr class="w3-light-grey">
-        <th>id</th>
-        <th>measurement_time</th>
-        <th>used</th>
-        <th>active</th>
-        <th>inactive</th>
-        <th>usage_percent</th>
+        <th>ID</th>
+        <th>Measurement Time</th>
+        <th>Used</th>
+        <th>Active</th>
+        <th>Inactive</th>
+        <th>Usage Percent</th>
       </tr>
     </thead>
-  {% for cur_memory in mem_list %}
-    <tr>
-      <td>{{cur_memory.id}}</td>
-      <td>{{cur_memory.measurement_time}}</td>
-      <td>{{cur_memory.used}}</td>
-      <td>{{cur_memory.active}}</td>
-      <td>{{cur_memory.inactive}}</td>
-      <td>{{cur_memory.usage_percent}}</td>
-    </tr>
-  {% endfor %}
-  </table >
+    <tbody id="memory_table_body">
+    </tbody>
+  </table>
 </div>
-<br>
 
 <script>
   function fetchMemoryData() {
-    fetch('/memory_data')
-      .then(response => response.json())
-      .then(data => {
-        const tbody = document.querySelector('table tbody');
-        tbody.innerHTML = ''; // Clear existing rows
-        data.mem_list.forEach((cur_memory) => {
-          const row = `<tr>
-            <td>${cur_memory.id}</td>
-            <td>${cur_memory.measurement_time}</td>
-            <td>${cur_memory.used}</td>
-            <td>${cur_memory.active}</td>
-            <td>${cur_memory.inactive}</td>
-            <td>${cur_memory.usage_percent}%</td>
-          </tr>`;
-          tbody.innerHTML += row;
-        });
-      })
-      .catch(error => {
-        console.error('Error fetching memory data:', error);
+  fetch('/memory_data')
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('total_memory').textContent = 'Total Memory: ' + data.total_memory;
+      const tbody = document.getElementById('memory_table_body');
+      tbody.innerHTML = '';
+      data.mem_list.forEach((cur_memory) => {
+        const row = `<tr>
+          <td>${cur_memory.id}</td>
+          <td>${cur_memory.measurement_time}</td>
+          <td>${cur_memory.used}</td>
+          <td>${cur_memory.active}</td>
+          <td>${cur_memory.inactive}</td>
+          <td>${cur_memory.usage_percent}%</td>
+        </tr>`;
+        tbody.innerHTML += row;
       });
-  }
+    })
+    .catch(error => {
+      console.error('Error fetching memory data:', error);
+    });
+}
 
-  // Fetch memory data every 60 seconds
-  setInterval(fetchMemoryData, 10000);
+// Fetch memory data every 60 seconds
+setInterval(fetchMemoryData, 10000);
 
-  // Fetch data on initial load
-  fetchMemoryData();
+// Fetch data on initial load
+fetchMemoryData();
 </script>
-
 </body>
 </html>

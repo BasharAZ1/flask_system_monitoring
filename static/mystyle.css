@@ -6,6 +6,11 @@ body, html {
   line-height: 1.8;
 }
 
+.myNav {
+  margin: 3px;
+  border-radius: 5px;
+}
+
 /* Create a Parallax Effect */
 .bgimg-1, .bgimg-2, .bgimg-3 {
   background-attachment: fixed;
@@ -32,16 +37,12 @@ body, html {
   min-height: 400px;
 }
 
-.w3-wide {letter-spacing: 10px;}
-.w3-hover-opacity {cursor: pointer;}
+.w3-wide {
+  letter-spacing: 10px;
+}
 
-/* Turn off parallax scrolling for tablets and phones */
-@media only screen and (max-device-width: 1600px) {
-  .bgimg-1, .bgimg-2, .bgimg-3 {
-    background-attachment: scroll;
-    min-height: 400px;
-  }
-
+.w3-hover-opacity {
+  cursor: pointer;
 }
 
 /* Home Button */
@@ -61,3 +62,57 @@ body, html {
   background-color: RoyalBlue;
 }
 
+
+/* Style for the SSH form */
+#sshForm {
+  margin-top: 50px;
+  padding: 20px;
+  width: 300px;
+}
+
+#sshForm input[type="text"],
+#sshForm input[type="password"] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#sshForm input[type="submit"] {
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#sshForm input[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+
+/* Style for the localhost form */
+#localhostForm {
+  padding: 20px;
+  width: 300px;
+}
+
+#localhostForm input[type="submit"] {
+  width: 100%;
+  background-color: #4c6daf;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#localhostForm input[type="submit"]:hover {
+  background-color: #4545a0;
+}

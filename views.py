@@ -132,5 +132,16 @@ def ssh_connect():
         flash('SSH connection successful.', 'success')
         return redirect(url_for('homepage'))
     except Exception as e:
-        flash('SSH connection successful.', 'fail')
+        flash('SSH connection failed.', 'fail')
+    return redirect(url_for('homepage'))
+
+
+def set_localhost():
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.close()
+    shared.current_hostname = 'localhost'
+    shared.current_username = ''
+    shared.current_password = ''
+    flash('Localhost connection successful.', 'success')
     return redirect(url_for('homepage'))

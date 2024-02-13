@@ -1,70 +1,64 @@
 <!DOCTYPE html>
 <html>
-<title>W3.CSS</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<head>
+  <title>Active Processes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
 <body>
 
 <div class="w3-container">
   <br>
-  <form>
-    <div style="display: flex; justify-content: flex-end;">
-      <input type="button" value="&#8962; Home" onclick="history.back()" class="btn">
-    </div>
-  </form>
+  <div style="display: flex; justify-content: flex-end;">
+    <button class="btn" onclick="history.back()">&#8962; Home</button>
+  </div>
 
   <h2>Active Processes</h2>
 
   <table class="w3-table-all w3-hoverable">
     <thead>
       <tr class="w3-light-grey">
-        <th>id</th>
-        <th>measurement_time</th>
-        <th>pid</th>
-        <th>name</th>
-        <th>status</th>
-        <th>start_date</th>
+        <th>Measurement Time</th>
+        <th>PID</th>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Start Date</th>
       </tr>
     </thead>
-  {% for cur_active_process in active_processes_list %}
-    <tr>
-      <td>{{cur_active_process.id}}</td>
-      <td>{{cur_active_process.measurement_time}}</td>
-      <td>{{cur_active_process.pid}}</td>
-      <td>{{cur_active_process.name}}</td>
-      <td>{{cur_active_process.status}}</td>
-      <td>{{cur_active_process.start_date}}</td>
-    </tr>
-  {% endfor %}
+    <tbody id="processes_table_body">
+    </tbody>
   </table>
 </div>
 
 <script>
-  function fetchProcData() {
-    fetch('/active_processes_data')
-      .then(response => response.json())
-      .then(data => {
-        const tbody = document.querySelector('table tbody');
-        tbody.innerHTML = '';
-        data.active_processes_list.forEach((proc) => {
-          const row = `<tr>
-            <td>${proc.id}</td>
-            <td>${proc.measurement_time}</td>
-            <td>${proc.pid}</td>
-            <td>${proc.name}</td>
-            <td>${proc.status}</td>
-            <td>${proc.start_date}</td>
-          </tr>`;
-          tbody.innerHTML += row;
-        });
+  function fetchProcessesData() {
+  fetch('/active_processes_data')
+    .then(response => response.json())
+    .then(data => {
+      const tbody = document.getElementById('processes_table_body');
+      tbody.innerHTML = '';
+      data.active_processes_list.forEach((proc) => {
+        const row = `<tr>
+          <td>${proc.measurement_time}</td>
+          <td>${proc.pid}</td>
+          <td>${proc.name}</td>
+          <td>${proc.status}</td>
+          <td>${proc.start_date}</td>
+        </tr>`;
+        tbody.innerHTML += row;
       });
-  }
+    })
+    .catch(error => {
+      console.error('Error fetching processes data:', error);
+    });
+}
 
-  // Fetch data every 60 seconds
-  setInterval(fetchProcData, 10000);
+// Fetch processes data every 60 seconds
+setInterval(fetchProcessesData, 10000);
 
-  // Fetch data on initial load
-  fetchProcData();
-  </script>
+// Fetch data on initial load
+fetchProcessesData();
+</script>
 </body>
 </html>
