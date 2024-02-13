@@ -25,10 +25,42 @@ hostname_changed_event = threading.Event()
 shared.current_hostname = DEFAULT_HOSTNAME
 
 
+def collect_remote_system_info(ssh_client):
+    try:
+        stdin, stdout, stderr = ssh_client.exec_command("ls")
+        
+        # Read the output
+        output = stdout.read().decode("utf-8")
+        
+        # Print the output
+        print("ls command output:")
+        print(output)
+
+        # # Execute commands to collect system info remotely
+        # stdin, stdout, stderr = ssh_client.exec_command("free -m")  # Example command to get memory info
+        # mem_info = stdout.read().decode("utf-8")
+        # stdin, stdout, stderr = ssh_client.exec_command("df -h")  # Example command to get disk usage info
+        # disk_info = stdout.read().decode("utf-8")
+        # stdin, stdout, stderr = ssh_client.exec_command("top -bn1")  # Example command to get CPU usage info
+        # cpu_info = stdout.read().decode("utf-8")
+
+        # # Close SSH connection
+        # # ssh_client.close()
+        # testin, testout, testerr = ssh_client.exec_command("ls")
+        # print(testin.read().decode("utf-8") + testout.read().decode("utf-8") + testerr.read().decode("utf-8"))
+        # # Return the collected information
+        # return mem_info, disk_info, cpu_info
+
+    except Exception as e:
+        print("Error:", e)
+        return None
+
+
 def collect_system_info(hostname=DEFAULT_HOSTNAME):
     with app.app_context():
         hostname = shared.current_hostname
-        
+        username = shared.current_username
+        password = shared.current_password
         if hostname == DEFAULT_HOSTNAME:
             virtual_memory = psutil.virtual_memory()
             disk_usage = psutil.disk_usage("/")
@@ -54,12 +86,18 @@ def collect_system_info(hostname=DEFAULT_HOSTNAME):
                     pass
 
         else:
-            memory_data = Memory(used=1, active=1, inactive=1,
-                                usage_percent=1, host_ip=hostname)
-            disk_data = Disk(used=2 / (1024**3), free=2 / (1024**3),
-                            usage_percent=2, host_ip=hostname)
-            cpu_data = Cpu(times_user=3, times_system=3, times_idle=3,
-                            usage_percent=3, host_ip=hostname)
+            ssh = paramiko.SSHClient()
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            print('here')
+            try:
+                print('what about here?')
+                ssh.connect(hostname, username=username, password=password)
+                print('or here?')
+                memory_data, disk_data, cpu_data = collect_remote_system_info(ssh)
+            
+            except Exception as e:
+                print("Error:", e)
+
             db.session.query(ActiveProcesses).delete()
             process = ActiveProcesses(id=0, measurement_time='s', pid=1234, name='process1', status='running', start_date='2024-02-13 12:00:00.000', host_ip=hostname)
             db.session.add(process)

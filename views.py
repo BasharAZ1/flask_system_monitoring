@@ -124,7 +124,11 @@ def ssh_connect():
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(hostname, username=username, password=password)
         session['hostname'] = hostname
+        session['username'] = username
+        session['password'] = password
         shared.current_hostname = hostname
+        shared.current_username = username
+        shared.current_password = password
         flash('SSH connection successful.', 'success')
         return redirect(url_for('homepage'))
     except Exception as e:
