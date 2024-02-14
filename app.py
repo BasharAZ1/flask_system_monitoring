@@ -7,8 +7,7 @@ import threading
 import time
 import shared 
 import paramiko
-from remote_info import collect_remote_system_info
-from system_info import collect_local_info
+from views import collect_local_info,collect_remote_system_info
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default_fallback_secret_key')
