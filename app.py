@@ -44,7 +44,6 @@ def collect_remote_system_info(ssh_client):
                            times_idle=times_idle,
                             usage_percent=usage_percent,
                             host_ip=shared.current_hostname)
-        db.session.add(cpu_data)
         stdin, stdout, stderr = ssh_client.exec_command("top -bn 1 | grep Mem")
         output = stdout.read().decode("utf-8")
         data_line = output.split('\n')[0]
@@ -64,6 +63,25 @@ def collect_remote_system_info(ssh_client):
                                  inactive=kb_to_gb(Inactive_mem),
                                 usage_percent=round(usage_percent,2),
                                 host_ip=shared.current_hostname)
+        stdin, stdout, stderr = ssh_client.exec_command('df -h /')
+        output = stdout.read().decode("utf-8")
+        data_line = output.split('\n')[1]
+        parts=data_line.split()
+        disk_size=parts[1]
+        disk_used=parts[2]
+        disk_avil=parts[3]
+        disk_percent=parts[4]
+        shared.total_space=disk_size
+        disk_data = Disk(used=round(float(disk_used[:-1]),2),
+                             free=round(float(disk_avil[:-1]) ,2) ,
+                            usage_percent=disk_percent[:1],
+                            host_ip=shared.current_hostname)
+        
+        
+        
+        
+        db.session.add(cpu_data)
+        db.session.add(disk_data)
         db.session.add(memory_data)
         db.session.commit()
         
