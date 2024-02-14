@@ -1,7 +1,6 @@
 from models import Memory, Cpu, Disk, ActiveProcesses
-from flask import jsonify, render_template, request, session, flash, redirect, url_for
+from flask import jsonify, render_template
 import psutil 
-import paramiko
 import shared
 
 
@@ -103,37 +102,6 @@ def active_processes_data():
     return jsonify({'active_processes_list': active_list})
 
 
-def ssh_connect():
-    hostname = request.form['hostname']
-    username = request.form['username']
-    password = request.form['password']
-
-    try:
-        ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(hostname, username=username, password=password)
-        session['hostname'] = hostname
-        session['username'] = username
-        session['password'] = password
-        shared.current_hostname = hostname
-        shared.current_username = username
-        shared.current_password = password
-        flash('SSH connection successful.', 'success')
-        return redirect(url_for('homepage'))
-    except Exception as e:
-        flash('SSH connection failed.', 'fail')
-    return redirect(url_for('homepage'))
-
-
-def set_localhost():
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.close()
-    shared.current_hostname = 'localhost'
-    shared.current_username = ''
-    shared.current_password = ''
-    flash('Localhost connection successful.', 'success')
-    return redirect(url_for('homepage'))
 
 
 
