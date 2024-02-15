@@ -6,10 +6,13 @@ mem_info_gb_formatted=0
 total_space=0
 
 
-
-
 def bytes_to_gb(bytes):
     return bytes / (1024.0 ** 3)
 
+
 def kb_to_gb(kb):
      return round(float(kb) / 1024 / 1024,2)
+
+
+def mb_to_gb(mb):
+     return round(float(mb) / 1024)

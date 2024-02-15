@@ -23,7 +23,6 @@ hostname_changed_event = threading.Event()
 shared.current_hostname = DEFAULT_HOSTNAME
 
 
-
 def collect_system_info(hostname=DEFAULT_HOSTNAME):
     with app.app_context():
         hostname = shared.current_hostname

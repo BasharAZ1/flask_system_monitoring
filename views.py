@@ -2,12 +2,11 @@ from models import Memory, Cpu, Disk, ActiveProcesses,db
 from flask import jsonify, render_template,request, session, flash, redirect, url_for
 import psutil 
 import shared
-from shared import bytes_to_gb,kb_to_gb,current_hostname
+from shared import bytes_to_gb, mb_to_gb, current_hostname
 from datetime import datetime
 from models import db, Memory, Cpu, Disk, ActiveProcesses
 import shared
 import paramiko
-
 
 
 DEFAULT_HOSTNAME = 'localhost'
@@ -46,7 +45,7 @@ def memory_utilization():
         mem_info_gb = psutil.virtual_memory().total/(1024 ** 3)
         shared.mem_info_gb_formatted = "{:.2f} GB".format(mem_info_gb)
     else:
-        shared.mem_info_gb_formatted="{:.2f} GB".format(0)
+        shared.mem_info_gb_formatted="{:.2f} GB".format(shared.mem_info_gb_formatted)
 
     return render_template("memory_utilization.html")
 
@@ -102,12 +101,10 @@ def active_processes_data():
         'measurement_time': procces.measurement_time[:-7],
         'name': procces.name,
         'status': procces.status,
-        'start_date': procces.start_date,
+        'start_date': procces.start_date[:-7],
     } for procces in active_processes_data]
     
     return jsonify({'active_processes_list': active_list})
-
-
 
 
 def collect_local_info():
@@ -144,12 +141,6 @@ def collect_local_info():
         db.session.add(disk_data)
         db.session.add(cpu_data)
         db.session.commit()
-        
-        
-        
-        
-        
-
 
 
 def ssh_connect():
@@ -185,8 +176,6 @@ def set_localhost():
     return redirect(url_for('homepage'))
 
 
-
-
 def collect_remote_system_info(ssh_client):
     try:
         stdin, stdout, stderr = ssh_client.exec_command("top -bn 1 | grep Cpu")
@@ -209,6 +198,7 @@ def collect_remote_system_info(ssh_client):
         free_mem=round(float(parts[1].split()[0]),2)
         total_mem=round(float(parts[0].split()[3]),2)
         usage_percent = (mem_used / total_mem) * 100
+        shared.mem_info_gb_formatted=shared.mb_to_gb(total_mem)
         stdin, stdout, stderr = ssh_client.exec_command('cat /proc/meminfo | grep -E "Active:|Inactive:"')
         output = stdout.read().decode("utf-8")
         active_mem_kb = output.split('\n')[0].split(':')[1]
@@ -250,13 +240,11 @@ def collect_remote_system_info(ssh_client):
                 process = ActiveProcesses(pid=pid, name=command, status=stat, start_date=startdate, host_ip=shared.current_hostname)
                 db.session.add(process)
 
-
-
         db.session.add(cpu_data)
         db.session.add(disk_data)
         db.session.add(memory_data)
         db.session.commit()
-        
+
 
     except Exception as e:
         print("Error:", e)
