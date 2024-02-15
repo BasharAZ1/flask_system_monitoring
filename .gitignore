@@ -1,3 +1,4 @@
 __pycache__
 migrations
 instance
+.DS_Store
