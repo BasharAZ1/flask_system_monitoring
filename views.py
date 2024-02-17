@@ -32,6 +32,10 @@ def cpu_usage_data():
             'usage_percent': f'{curr_cpu.usage_percent}%',
             'cpu_counts':curr_cpu.total_cores,
         } for curr_cpu in cpu_data]
+    
+    if not cpu_data_list:
+        return jsonify({ 'cpu_counts': 0, 'cpu_list': []})
+    
     last_cpu_data = cpu_data_list[-1]
     return jsonify({'cpu_counts': last_cpu_data['cpu_counts'], 'cpu_list': cpu_data_list})
 
@@ -52,6 +56,10 @@ def memory_utilization_data():
         'usage_percent': mem.usage_percent,
         'Total_memory':f'{mem.total_mem} GB',
     } for mem in mem_data]
+    
+    if not mem_data:
+        return jsonify({'mem_list':data, 'total_memory':0})
+
     last_data = data[-1]
     return jsonify({'mem_list':data, 'total_memory':last_data['Total_memory']})
 
@@ -71,8 +79,11 @@ def disk_space_data():
         'usage_percent': disk.usage_percent,
         'total_space': f'{disk.total_space} GB',
     } for disk in disk_data]
-    last_data = data[-1]
     
+    if not disk_data:
+        return jsonify({'disk_list':data,'total_space':0})
+    
+    last_data = data[-1]
     return jsonify({'disk_list':data,'total_space':last_data['total_space']})
 
 
