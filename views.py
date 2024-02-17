@@ -66,8 +66,8 @@ def disk_space_data():
     data = [{
         'id': disk.id,
         'measurement_time': disk.measurement_time[:-7],
-        'used': f'{disk.used} GB',
-        'free': f'{disk.free} GB',
+        'used': f'{disk.used}',
+        'free': f'{disk.free}',
         'usage_percent': disk.usage_percent,
         'total_space': f'{disk.total_space} GB',
     } for disk in disk_data]

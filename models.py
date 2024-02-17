@@ -17,6 +17,7 @@ class Cpu(db.Model):
     times_idle = db.Column(db.Float, unique=False, nullable=False)
     usage_percent = db.Column(db.Float, unique=False, nullable=False)
     host_ip = db.Column(db.String, unique=False, nullable=False)
+    total_cores=db.Column(db.String(255), unique=False, default="")
 
 
 class Memory(db.Model):
@@ -27,6 +28,7 @@ class Memory(db.Model):
     inactive = db.Column(db.Integer, unique=False, nullable=False)
     usage_percent = db.Column(db.Float, unique=False, nullable=False)
     host_ip = db.Column(db.String, unique=False, nullable=False)
+    total_mem=db.Column(db.String(255), unique=False, default="")
 
 
 class Disk(db.Model):
@@ -36,6 +38,7 @@ class Disk(db.Model):
     free = db.Column(db.Integer, unique=False, nullable=False)
     usage_percent = db.Column(db.Float, unique=False, nullable=False)
     host_ip = db.Column(db.String, unique=False, nullable=False)
+    total_space=db.Column(db.String(255), unique=False, default="")
     
     
 class ActiveProcesses(db.Model):

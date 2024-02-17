@@ -1,9 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title> CPU Usage Monitor </title>
+  <title>CPU Usage Monitor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+  <style>
+    h1 {
+      text-align: center;
+    }
+    
+    h2 {
+      text-align: center;
+    }
+    </style>
 </head>
 <body>
 
@@ -13,8 +25,8 @@
     <button class="btn" onclick="history.back()">&#8962; Home</button>
   </div>
 
-  <h2>CPU Usage</h2>
-  <p id="cpu_counts"> CPU Cores Count: </p>
+  <h1>CPU Usage</h1>
+  <p id="cpu_counts">CPU Cores Count:</p>
   <table id="cpu_table" class="w3-table-all w3-hoverable">
     <thead>
       <tr class="w3-light-grey">
@@ -29,9 +41,55 @@
     <tbody id="cpu_table_body">
     </tbody>
   </table>
+  <h2>CPU usage percentage over time</h2>
+  <canvas id="cpu_chart"></canvas>
+  
 </div>
 
 <script>
+  // Chart.js initialization
+  var ctx = document.getElementById('cpu_chart').getContext('2d');
+  var cpuChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'CPU Usage Percentage',
+        data: [],
+        borderColor: 'blue',
+        borderWidth: 1,
+        backgroundColor: 'blue',
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        xAxes: [{
+          type: 'time',
+          time: {
+            unit: 'minute'
+          },
+          distribution: 'linear'
+        }],
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            max: 100
+          }
+        }]
+      },
+      plugins: {
+        datalabels: {
+          anchor: 'end',
+          align: 'top'
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+
   function fetchCPUData() {
     fetch('/cpu_usage_data')
       .then(response => response.json())
@@ -39,6 +97,9 @@
         document.getElementById('cpu_counts').textContent = 'CPU Cores Count: ' + data.cpu_counts;
         const tbody = document.getElementById('cpu_table_body');
         tbody.innerHTML = '';
+        // Reset the chart data
+        cpuChart.data.labels = [];
+        cpuChart.data.datasets[0].data = [];
         data.cpu_list.forEach((cur_cpu) => {
           const row = `<tr>
             <td>${cur_cpu.id}</td>
@@ -50,10 +111,18 @@
           </tr>`;
           tbody.innerHTML += row;
         });
+        // Limit the data to the last 10 measurements
+        const lastTenMeasurements = data.cpu_list.slice(-10);
+        // load the latest last 10 measurements to the chart 
+        lastTenMeasurements.forEach((cur_cpu) => {
+          cpuChart.data.labels.push(cur_cpu.measurement_time);
+          cpuChart.data.datasets[0].data.push(parseFloat(cur_cpu.usage_percent));
+        });
+        cpuChart.update();
       });
   }
 
-  // Fetch data every 60 seconds
+  // Fetch data every 10 seconds
   setInterval(fetchCPUData, 10000);
 
   // Fetch data on initial load
