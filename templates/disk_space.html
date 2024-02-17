@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+  <style>
+    h1 {
+      text-align: center;
+    }
+    
+    h2 {
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
 
@@ -14,7 +26,7 @@
     <button class="btn" onclick="history.back()">&#8962; Home</button>
   </div>
 
-  <h2>Disk Space</h2>
+  <h1>Disk Space</h1>
 
   <p id="total_space"> Total Space: </p>
 
@@ -31,37 +43,89 @@
     <tbody id="disk_table_body">
     </tbody>
   </table>
+  <h2>Disk free and used space chart [GB]</h2>
+  <canvas id="disk_chart"></canvas>
+  
 </div>
 
 <script>
+  // Chart.js initialization
+  var ctx = document.getElementById('disk_chart').getContext('2d');
+  var diskChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Free',
+        data: [],
+        backgroundColor: 'green',
+        borderWidth: 1
+      }, {
+        label: 'Used',
+        data: [],
+        backgroundColor: 'red',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      indexAxis: 'y',
+      scales: {
+        x: {
+          stacked: true,
+        },
+        y: {
+          stacked: true
+        }
+      },
+      plugins: {
+        datalabels: {
+          color: 'white'
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+
   function fetchDiskData() {
-  fetch('/disk_data')
-    .then(response => response.json())
-    .then(data => {
-      document.getElementById('total_space').textContent = 'Total Space: ' + data.total_space;
-      const tbody = document.getElementById('disk_table_body');
-      tbody.innerHTML = '';
-      data.disk_list.forEach((disk) => {
-        const row = `<tr>
-          <td>${disk.id}</td>
-          <td>${disk.measurement_time}</td>
-          <td>${disk.used}</td>
-          <td>${disk.free}</td>
-          <td>${disk.usage_percent}%</td>
-        </tr>`;
-        tbody.innerHTML += row;
+    fetch('/disk_data')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('total_space').textContent = 'Total Space: ' + data.total_space;
+        const tbody = document.getElementById('disk_table_body');
+        tbody.innerHTML = '';
+        // Reset the chart data
+        diskChart.data.labels = [];
+        diskChart.data.datasets[0].data = [];
+        diskChart.data.datasets[1].data = [];
+        data.disk_list.forEach((disk) => {
+          const row = `<tr>
+            <td>${disk.id}</td>
+            <td>${disk.measurement_time}</td>
+            <td>${disk.used} GB</td>
+            <td>${disk.free} GB</td>
+            <td>${disk.usage_percent}%</td>
+          </tr>`;
+          tbody.innerHTML += row;
+        });
+        // Load the latest measurements to the chart 
+        const latestDisk = data.disk_list[data.disk_list.length - 1];
+        diskChart.data.labels.push('Disk Space');
+        diskChart.data.datasets[0].data.push(parseFloat(latestDisk.free));
+        diskChart.data.datasets[1].data.push(parseFloat(latestDisk.used));
+        diskChart.update();
+      })
+      .catch(error => {
+        console.error('Error fetching disk data:', error);
       });
-    })
-    .catch(error => {
-      console.error('Error fetching disk data:', error);
-    });
-}
+  }
 
-// Fetch disk data every 60 seconds
-setInterval(fetchDiskData, 10000);
+  // Fetch disk data every 10 seconds
+  setInterval(fetchDiskData, 10000);
 
-// Fetch data on initial load
-fetchDiskData();
+  // Fetch data on initial load
+  fetchDiskData();
 </script>
 </body>
 </html>

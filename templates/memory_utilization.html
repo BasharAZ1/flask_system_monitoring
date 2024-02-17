@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+  <style>
+    h1 {
+      text-align: center;
+    }
+    
+    h2 {
+      text-align: center;
+    }
+    </style>
 </head>
 <body>
 
@@ -14,7 +26,7 @@
     <button class="btn" onclick="history.back()">&#8962; Home</button>
   </div>
 
-  <h2>Memory Utilization</h2>
+  <h1>Memory Utilization</h1>
 
   <p id="total_memory"> Total Memory: </p>
 
@@ -32,9 +44,54 @@
     <tbody id="memory_table_body">
     </tbody>
   </table>
+  <h2>Memory usage percentage over time</h2>
+  <canvas id="memory_chart"></canvas>
+  
 </div>
 
 <script>
+  var ctx = document.getElementById('memory_chart').getContext('2d');
+  var memoryChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Memory Usage Percentage',
+        data: [],
+        borderColor: 'blue',
+        borderWidth: 1,
+        backgroundColor: 'blue',
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        xAxes: [{
+          type: 'time',
+          time: {
+            unit: 'minute'
+          },
+          distribution: 'linear'
+        }],
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            max: 100
+          }
+        }]
+      },
+      plugins: {
+        datalabels: {
+          anchor: 'end',
+          align: 'top'
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+
   function fetchMemoryData() {
   fetch('/memory_data')
     .then(response => response.json())
@@ -42,6 +99,9 @@
       document.getElementById('total_memory').textContent = 'Total Memory: ' + data.total_memory;
       const tbody = document.getElementById('memory_table_body');
       tbody.innerHTML = '';
+      // Reset the chart data
+      memoryChart.data.labels = [];
+      memoryChart.data.datasets[0].data = [];
       data.mem_list.forEach((cur_memory) => {
         const row = `<tr>
           <td>${cur_memory.id}</td>
@@ -53,6 +113,14 @@
         </tr>`;
         tbody.innerHTML += row;
       });
+      // Limit the data to the last 10 measurements
+      const lastTenMeasurements = data.mem_list.slice(-10);
+      // load the latest last 10 measurements to the chart 
+      lastTenMeasurements.forEach((cur_memory) => {
+        memoryChart.data.labels.push(cur_memory.measurement_time);
+        memoryChart.data.datasets[0].data.push(parseFloat(cur_memory.usage_percent));
+      });
+      memoryChart.update();
     })
     .catch(error => {
       console.error('Error fetching memory data:', error);
