@@ -9,6 +9,7 @@ def get_local_time():
     local_now = datetime.now().astimezone(local_timezone)
     return local_now.strftime('%Y-%m-%d %H:%M:%S.%f')
 
+
 class Cpu(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     measurement_time = db.Column(db.String(50), unique=False, nullable=False, default=get_local_time)

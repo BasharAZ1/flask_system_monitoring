@@ -9,6 +9,7 @@ import shared
 import paramiko
 from views import collect_local_info,collect_remote_system_info
 
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default_fallback_secret_key')
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///site.db"

@@ -26,9 +26,9 @@ def cpu_usage_data():
     cpu_data_list = [{
             'id': curr_cpu.id,
             'measurement_time': curr_cpu.measurement_time[:-7],
-            'times_user': f'{curr_cpu.times_user} seconds',
-            'times_system': f'{curr_cpu.times_system} seconds',
-            'times_idle': f'{curr_cpu.times_idle} seconds',
+            'times_user': f'{curr_cpu.times_user} {"seconds" if host == "localhost" else "%"}',
+            'times_system': f'{curr_cpu.times_system} {"seconds" if host == "localhost" else "%"}',
+            'times_idle': f'{curr_cpu.times_idle} {"seconds" if host == "localhost" else "%"}',
             'usage_percent': f'{curr_cpu.usage_percent}%',
             'cpu_counts':curr_cpu.total_cores,
         } for curr_cpu in cpu_data]
@@ -257,4 +257,3 @@ def collect_remote_system_info(ssh_client):
     except Exception as e:
         print("Error:", e)
         return None
-
