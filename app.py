@@ -44,7 +44,7 @@ def collect_system_info(hostname=DEFAULT_HOSTNAME):
 def background_thread():
     while True:
         collect_system_info()
-        time.sleep(10)
+        time.sleep(60)
 
 
 def start_background_thread():
