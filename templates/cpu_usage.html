@@ -101,7 +101,8 @@
         cpuChart.data.labels = [];
         cpuChart.data.datasets[0].data = [];
         data.cpu_list.forEach((cur_cpu) => {
-          const row = `<tr>
+          const rowColor = parseFloat(cur_cpu.usage_percent) >75 ? 'style="background-color: red;"' : '';
+          const row = `<tr ${rowColor}>
             <td>${cur_cpu.id}</td>
             <td>${cur_cpu.measurement_time}</td>
             <td>${cur_cpu.times_user}</td>
@@ -121,12 +122,14 @@
         cpuChart.update();
       });
   }
-
+  
   // Fetch data every 10 seconds
   setInterval(fetchCPUData, 10000);
-
+  
   // Fetch data on initial load
   fetchCPUData();
+  
+  
 </script>
 </body>
 </html>
