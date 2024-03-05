@@ -228,7 +228,7 @@ def collect_remote_system_info(ssh_client):
         disk_percent=parts[4]
         disk_data = Disk(used=round(float(disk_used[:-1]),2),
                              free=round(float(disk_avil[:-1]) ,2) ,
-                            usage_percent=disk_percent[:1],
+                            usage_percent=disk_percent[:2],
                             host_ip=shared.current_hostname,
                             total_space=disk_size)
         

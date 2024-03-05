@@ -6,47 +6,39 @@ body, html {
   line-height: 1.8;
 }
 
-.myNav {
-  margin: 3px;
-  border-radius: 5px;
+.navbar {
+  background-color: #8ea3e1;
+  overflow: hidden;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
-/* Create a Parallax Effect */
-.bgimg-1, .bgimg-2, .bgimg-3 {
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-/* First image (Logo. Full height) */
-.bgimg-1 {
-  background-image: url('/w3images/parallax1.jpg');
-  min-height: 100%;
-}
-
-/* Second image (Portfolio) */
-.bgimg-2 {
-  background-image: url("/w3images/parallax2.jpg");
-  min-height: 400px;
-}
-
-/* Third image (Contact) */
-.bgimg-3 {
-  background-image: url("/w3images/parallax3.jpg");
-  min-height: 400px;
-}
-
-.w3-wide {
-  letter-spacing: 10px;
-}
-
-.w3-hover-opacity {
+.navbar-toggler {
+  background-color: transparent;
+  border: none;
+  color: #fff;
   cursor: pointer;
+  font-size: 20px;
+  margin-right: 20px;
 }
 
-/* Home Button */
+.navbar-item {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 20px;
+  display: block;
+  border: 1px solid transparent;
+  border-radius: 6px;
+}
 
+.navbar-item:hover {
+  background-color: #555;
+}
+
+.navbar-item-right {
+  margin-left: auto;
+}
 
 .btn {
   background-color: DodgerBlue;
@@ -57,62 +49,92 @@ body, html {
   cursor: pointer;
 }
 
-/* Darker background on mouse-over */
 .btn:hover {
   background-color: RoyalBlue;
 }
 
-
-/* Style for the SSH form */
-#sshForm {
-  margin-top: 50px;
-  padding: 20px;
-  width: 300px;
+.container {
+  max-width: 500px;
+  margin: 20px auto; /* Added some margin for better spacing */
+  background-color: #f0f0f0; /* Light gray background */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
+  padding: 20px; /* Added padding for better spacing */
 }
 
-#sshForm input[type="text"],
-#sshForm input[type="password"] {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  box-sizing: border-box;
+.header {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center; 
+}
+
+.forms-container {
+  margin-bottom: 3px;
+}
+
+.ssh-form, .localhost-form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.ssh-form label, .localhost-form label {
+  margin-bottom: 5px;
+}
+
+.ssh-form input[type="text"],
+.ssh-form input[type="password"],
+.ssh-form input[type="submit"],
+.localhost-form input[type="submit"] {
+  padding: 8px;
+  margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
-#sshForm input[type="submit"] {
-  width: 100%;
+.ssh-form input[type="submit"],
+.localhost-form input[type="submit"] {
   background-color: #4CAF50;
   color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
   border: none;
-  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.localhost-form input[type="submit"] {
+  background-color: #00bbff;
+  color: white;
+  border: none;
   cursor: pointer;
 }
 
-#sshForm input[type="submit"]:hover {
+.ssh-form input[type="submit"]:hover {
   background-color: #45a049;
 }
 
-
-/* Style for the localhost form */
-#localhostForm {
-  padding: 20px;
-  width: 300px;
+.localhost-form input[type="submit"]:hover {
+  background-color: #007bff;
 }
 
-#localhostForm input[type="submit"] {
-  width: 100%;
-  background-color: #4c6daf;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
+.messages-container {
+  margin-bottom: 3px;
+}
+
+.alert {
+  padding: 3px;
   border-radius: 4px;
-  cursor: pointer;
 }
 
-#localhostForm input[type="submit"]:hover {
-  background-color: #4545a0;
+.alert.fail {
+  background-color: #f44336;
+  color: white;
+  width: fit-content;
+
+}
+
+.alert.success {
+  background-color: #4CAF50;
+  color: white;
+  width: fit-content;
 }
